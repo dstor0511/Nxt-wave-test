@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>¿Cuál es tu Superpoder en el Mundo? — NXT WAVE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800;900&family=Sora:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0f;
+  --surface:#14141f;
+  --surface2:#1e1e2e;
+  --text:#f0f0f5;
+  --text-dim:#8888a0;
+  --red:#e63946;
+  --red-glow:#e6394640;
+  --blue:#457b9d;
+  --blue-glow:#457b9d40;
+  --yellow:#f4a261;
+  --yellow-glow:#f4a26140;
+  --green:#2a9d8f;
+  --green-glow:#2a9d8f40;
+  --accent:var(--green);
+  --radius:16px;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Sora',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100dvh;
+  overflow-x:hidden;
+  -webkit-tap-highlight-color:transparent;
+}
+
+/* ─── INTRO SCREEN ─── */
+.screen{display:none;flex-direction:column;min-height:100dvh}
+.screen.active{display:flex}
+
+#intro{
+  align-items:center;justify-content:center;text-align:center;
+  padding:2rem 1.5rem;
+  background:radial-gradient(ellipse at 50% 0%,#1a1a3060,transparent 70%),var(--bg);
+  position:relative;overflow:hidden;
+}
+#intro::before{
+  content:'';position:absolute;top:-40%;left:-20%;width:140%;height:100%;
+  background:conic-gradient(from 180deg,var(--red-glow),var(--blue-glow),var(--green-glow),var(--yellow-glow),var(--red-glow));
+  filter:blur(80px);opacity:.4;animation:rotBg 20s linear infinite;
+}
+@keyframes rotBg{to{transform:rotate(360deg)}}
+
+.intro-content{position:relative;z-index:1;max-width:420px}
+.brand{
+  font-family:'Outfit',sans-serif;font-weight:800;font-size:.85rem;
+  letter-spacing:.35em;text-transform:uppercase;color:var(--text-dim);
+  margin-bottom:1.5rem;
+}
+.intro-title{
+  font-family:'Outfit',sans-serif;font-weight:900;
+  font-size:clamp(2rem,8vw,3.2rem);line-height:1.1;
+  margin-bottom:1rem;
+}
+.intro-title span{
+  background:linear-gradient(135deg,var(--red),var(--blue),var(--green),var(--yellow));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.intro-sub{
+  font-size:1rem;color:var(--text-dim);line-height:1.6;
+  margin-bottom:2.5rem;max-width:340px;margin-inline:auto;
+}
+.btn-start{
+  display:inline-flex;align-items:center;gap:.6rem;
+  padding:1rem 2.5rem;
+  background:linear-gradient(135deg,var(--green),#34b8a8);
+  color:#fff;font-family:'Sora',sans-serif;font-weight:700;font-size:1.05rem;
+  border:none;border-radius:60px;cursor:pointer;
+  box-shadow:0 8px 30px var(--green-glow);
+  transition:transform .2s,box-shadow .2s;
+}
+.btn-start:active{transform:scale(.96)}
+.btn-start svg{width:20px;height:20px}
+
+/* ─── QUIZ SCREEN ─── */
+#quiz{padding:0 0 2rem}
+
+.progress-wrap{
+  position:sticky;top:0;z-index:10;
+  background:var(--bg);padding:.75rem 1.5rem .5rem;
+  border-bottom:1px solid #ffffff08;
+}
+.progress-info{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:.5rem;font-size:.8rem;color:var(--text-dim);
+}
+.progress-bar{
+  height:5px;background:var(--surface2);border-radius:10px;overflow:hidden;
+}
+.progress-fill{
+  height:100%;width:0%;border-radius:10px;
+  background:linear-gradient(90deg,var(--green),var(--blue));
+  transition:width .4s cubic-bezier(.4,0,.2,1);
+}
+
+.question-container{
+  padding:1.5rem;max-width:520px;margin:0 auto;
+}
+.question-card{
+  animation:fadeUp .4s ease;
+}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.q-number{
+  font-family:'Outfit',sans-serif;font-weight:800;font-size:.75rem;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--accent);
+  margin-bottom:.75rem;
+}
+.q-text{
+  font-size:1.15rem;font-weight:600;line-height:1.5;
+  margin-bottom:1.5rem;
+}
+.options{display:flex;flex-direction:column;gap:.75rem}
+.option-btn{
+  display:flex;align-items:flex-start;gap:.85rem;
+  padding:1rem 1.15rem;
+  background:var(--surface);
+  border:2px solid transparent;
+  border-radius:var(--radius);
+  cursor:pointer;text-align:left;
+  transition:all .25s ease;
+  color:var(--text);font-family:'Sora',sans-serif;font-size:.95rem;
+  line-height:1.45;
+  -webkit-user-select:none;user-select:none;
+}
+.option-btn:active{transform:scale(.98)}
+.option-btn .letter{
+  flex-shrink:0;width:32px;height:32px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:10px;background:var(--surface2);
+  font-weight:700;font-size:.85rem;color:var(--text-dim);
+  transition:all .25s ease;
+}
+.option-btn:hover,.option-btn:focus-visible{
+  border-color:var(--accent);background:var(--surface2);
+}
+.option-btn:hover .letter{background:var(--accent);color:#fff}
+.option-btn.selected{
+  border-color:var(--accent);
+  background:color-mix(in srgb,var(--accent) 10%,var(--surface));
+}
+.option-btn.selected .letter{background:var(--accent);color:#fff}
+
+.nav-row{
+  display:flex;gap:.75rem;margin-top:1.5rem;
+}
+.btn-nav{
+  flex:1;padding:.9rem;border:none;border-radius:var(--radius);
+  font-family:'Sora',sans-serif;font-weight:600;font-size:.95rem;
+  cursor:pointer;transition:all .2s;
+}
+.btn-prev{background:var(--surface2);color:var(--text-dim)}
+.btn-prev:active{background:var(--surface)}
+.btn-next{
+  background:var(--accent);color:#fff;
+  box-shadow:0 4px 16px var(--green-glow);
+}
+.btn-next:disabled{opacity:.35;cursor:not-allowed;box-shadow:none}
+.btn-next:not(:disabled):active{transform:scale(.97)}
+
+/* ─── RESULT SCREEN ─── */
+#result{
+  align-items:center;justify-content:center;
+  padding:2rem 1.5rem;text-align:center;
+  position:relative;overflow:hidden;
+}
+.result-card{
+  position:relative;z-index:1;
+  width:100%;max-width:400px;
+  padding:2.5rem 1.75rem 2rem;
+  border-radius:24px;
+  animation:popIn .5s cubic-bezier(.2,.8,.3,1.2);
+}
+@keyframes popIn{
+  from{opacity:0;transform:scale(.85)}
+  to{opacity:1;transform:scale(1)}
+}
+.result-card.creadores{
+  background:linear-gradient(160deg,#1a0a0a,#2a0f10);
+  border:2px solid var(--red);
+  box-shadow:0 0 60px var(--red-glow),0 0 120px var(--red-glow);
+}
+.result-card.solucionadores{
+  background:linear-gradient(160deg,#0a1018,#0f1a28);
+  border:2px solid var(--blue);
+  box-shadow:0 0 60px var(--blue-glow),0 0 120px var(--blue-glow);
+}
+.result-card.protectores{
+  background:linear-gradient(160deg,#1a1508,#2a2010);
+  border:2px solid var(--yellow);
+  box-shadow:0 0 60px var(--yellow-glow),0 0 120px var(--yellow-glow);
+}
+.result-card.comunicadores{
+  background:linear-gradient(160deg,#081a16,#0f2a22);
+  border:2px solid var(--green);
+  box-shadow:0 0 60px var(--green-glow),0 0 120px var(--green-glow);
+}
+
+.result-emoji{font-size:3.5rem;margin-bottom:.75rem}
+.result-label{
+  font-family:'Outfit',sans-serif;font-weight:300;font-size:.85rem;
+  letter-spacing:.3em;text-transform:uppercase;color:var(--text-dim);
+  margin-bottom:.4rem;
+}
+.result-title{
+  font-family:'Outfit',sans-serif;font-weight:900;
+  font-size:2.2rem;line-height:1.1;margin-bottom:.25rem;
+}
+.result-color-tag{
+  display:inline-block;padding:.3rem 1rem;border-radius:40px;
+  font-weight:700;font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;
+  margin-bottom:1.25rem;
+}
+.creadores .result-title{color:var(--red)}
+.creadores .result-color-tag{background:var(--red);color:#fff}
+.solucionadores .result-title{color:var(--blue)}
+.solucionadores .result-color-tag{background:var(--blue);color:#fff}
+.protectores .result-title{color:var(--yellow)}
+.protectores .result-color-tag{background:var(--yellow);color:#000}
+.comunicadores .result-title{color:var(--green)}
+.comunicadores .result-color-tag{background:var(--green);color:#fff}
+
+.result-desc{
+  font-size:.95rem;line-height:1.7;color:var(--text-dim);
+  margin-bottom:1.5rem;
+}
+.result-verse{
+  font-style:italic;font-size:.85rem;color:var(--text);
+  line-height:1.6;opacity:.7;margin-bottom:1.5rem;
+  padding:0 .5rem;
+}
+.result-dress{
+  background:var(--surface);border-radius:var(--radius);
+  padding:1rem;margin-bottom:1.5rem;text-align:left;
+}
+.result-dress-title{
+  font-weight:700;font-size:.8rem;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--text-dim);margin-bottom:.5rem;
+}
+.result-dress-text{font-size:.9rem;line-height:1.5}
+
+.brand-footer{
+  font-family:'Outfit',sans-serif;font-weight:800;font-size:.7rem;
+  letter-spacing:.35em;text-transform:uppercase;color:var(--text-dim);
+  margin-top:.5rem;opacity:.5;
+}
+
+.btn-retry{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.85rem 2rem;margin-top:1rem;
+  background:var(--surface2);color:var(--text);
+  border:none;border-radius:60px;cursor:pointer;
+  font-family:'Sora',sans-serif;font-weight:600;font-size:.9rem;
+  transition:all .2s;
+}
+.btn-retry:active{transform:scale(.96)}
+
+/* ─── SCREENSHOT AREA ─── */
+.screenshot-hint{
+  font-size:.75rem;color:var(--text-dim);opacity:.5;
+  margin-top:1.5rem;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ INTRO ═══════ -->
+<div id="intro" class="screen active">
+  <div class="intro-content">
+    <div class="brand">NXT WAVE</div>
+    <h1 class="intro-title">¿Cuál es tu<br><span>Superpoder</span><br>en el Mundo?</h1>
+    <p class="intro-sub">Descubre si eres Creador, Solucionador, Protector o Comunicador. 10 preguntas, 2 minutos.</p>
+    <button class="btn-start" onclick="startQuiz()">
+      Comenzar
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ═══════ QUIZ ═══════ -->
+<div id="quiz" class="screen">
+  <div class="progress-wrap">
+    <div class="progress-info">
+      <span id="progLabel">Pregunta 1 de 10</span>
+      <span id="progPct">0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progFill"></div></div>
+  </div>
+  <div class="question-container" id="qContainer"></div>
+</div>
+
+<!-- ═══════ RESULT ═══════ -->
+<div id="result" class="screen"></div>
+
+<script>
+const questions = [
+  {
+    q: "En el colegio/universidad, ¿cuál es tu materia o actividad favorita?",
+    opts: [
+      { letter:"A", text:"Arte, Música o Literatura.", cat:"creadores" },
+      { letter:"B", text:"Matemáticas, Programación o Física.", cat:"solucionadores" },
+      { letter:"C", text:"Ética, Biología, Política o Sociales.", cat:"protectores" },
+      { letter:"D", text:"Idiomas, Debate o Teatro.", cat:"comunicadores" },
+    ]
+  },
+  {
+    q: "Si ves que un amigo está pasando por un mal momento, ¿cómo reaccionas?",
+    opts: [
+      { letter:"A", text:"Le haces una playlist, un dibujo o le escribes algo que lo inspire.", cat:"creadores" },
+      { letter:"B", text:"Le ayudas a pensar en pasos prácticos para resolver su problema.", cat:"solucionadores" },
+      { letter:"C", text:"Vas a su casa, lo escuchas por horas y lo acompañas.", cat:"protectores" },
+      { letter:"D", text:"Le dices las palabras exactas que necesita oír para recuperar el ánimo.", cat:"comunicadores" },
+    ]
+  },
+  {
+    q: "El grupo de conexión va a organizar un campamento. ¿Qué es lo primero que te ofreces a hacer?",
+    opts: [
+      { letter:"A", text:"Diseñar el logo, las camisetas y el video promocional.", cat:"creadores" },
+      { letter:"B", text:"Armar el presupuesto, los horarios y la logística de transporte.", cat:"solucionadores" },
+      { letter:"C", text:"Estar pendiente de los que van por primera vez o se sienten solos.", cat:"protectores" },
+      { letter:"D", text:"Encargarte de animar las reuniones y convencer a todos de que vayan.", cat:"comunicadores" },
+    ]
+  },
+  {
+    q: "¿Qué tipo de videojuegos o aplicaciones prefieres?",
+    opts: [
+      { letter:"A", text:"Los de construcción, diseño de mundos o edición de fotos/video.", cat:"creadores" },
+      { letter:"B", text:"Los de estrategia, rompecabezas o gestión de recursos.", cat:"solucionadores" },
+      { letter:"C", text:"Los de rol donde hay que salvar personas o simuladores de vida.", cat:"protectores" },
+      { letter:"D", text:"Las redes sociales o juegos multijugador donde hay que hablar mucho.", cat:"comunicadores" },
+    ]
+  },
+  {
+    q: "¿Qué es lo que más te duele del mundo?",
+    opts: [
+      { letter:"A", text:"Que a veces es muy aburrido y gris.", cat:"creadores" },
+      { letter:"B", text:"Que es desordenado y caótico.", cat:"solucionadores" },
+      { letter:"C", text:"Que es un lugar injusto y enfermo.", cat:"protectores" },
+      { letter:"D", text:"Que es un lugar dividido, donde existe el odio y las peleas.", cat:"comunicadores" },
+    ]
+  },
+  {
+    q: "¿Cuál es tu red social favorita (por cómo la usas)?",
+    opts: [
+      { letter:"A", text:"Pinterest o Instagram (por la estética y las ideas).", cat:"creadores" },
+      { letter:"B", text:"YouTube (para tutoriales de cómo funcionan las cosas).", cat:"solucionadores" },
+      { letter:"C", text:"WhatsApp (para estar en contacto uno a uno y ayudar a otros).", cat:"protectores" },
+      { letter:"D", text:"TikTok o X/Twitter (para dar mi opinión o compartir noticias).", cat:"comunicadores" },
+    ]
+  },
+  {
+    q: "Cuando entras a una habitación llena de gente desconocida...",
+    opts: [
+      { letter:"A", text:"Observas los detalles de la decoración o el estilo de la gente.", cat:"creadores" },
+      { letter:"B", text:"Analizas cómo está organizado el evento y si algo falta.", cat:"solucionadores" },
+      { letter:"C", text:"Buscas a alguien que parezca tímido para hacerlo sentir cómodo.", cat:"protectores" },
+      { letter:"D", text:"Saludas a varias personas y empiezas una conversación.", cat:"comunicadores" },
+    ]
+  },
+  {
+    q: "Si te dan una caja llena de piezas de LEGO, tú:",
+    opts: [
+      { letter:"A", text:"Haces algo artístico que nadie más ha imaginado.", cat:"creadores" },
+      { letter:"B", text:"Sigues las instrucciones al pie de la letra para que quede perfecto.", cat:"solucionadores" },
+      { letter:"C", text:"Construyes una casa u hospital para los personajes.", cat:"protectores" },
+      { letter:"D", text:"Inventas una historia sobre lo que está pasando entre las figuras.", cat:"comunicadores" },
+    ]
+  },
+  {
+    q: "¿Qué frase te define mejor?",
+    opts: [
+      { letter:"A", text:'"Me encanta dar vida a nuevas ideas".', cat:"creadores" },
+      { letter:"B", text:'"Me gusta que las cosas funcionen bien".', cat:"solucionadores" },
+      { letter:"C", text:'"Mi prioridad es que las personas estén bien".', cat:"protectores" },
+      { letter:"D", text:'"Me apasiona conectar a la gente con la verdad".', cat:"comunicadores" },
+    ]
+  },
+  {
+    q: '¿Cómo crees que puedes servir mejor a Dios en un trabajo "normal"?',
+    opts: [
+      { letter:"A", text:"Reflejando Su creatividad a través de la excelencia.", cat:"creadores" },
+      { letter:"B", text:"Reflejando Su orden a través de la buena administración.", cat:"solucionadores" },
+      { letter:"C", text:"Reflejando Su amor a través del cuidado de los demás.", cat:"protectores" },
+      { letter:"D", text:"Reflejando Su mensaje a través de la enseñanza de la Biblia y mi testimonio personal.", cat:"comunicadores" },
+    ]
+  },
+];
+
+const resultData = {
+  creadores: {
+    emoji: "🎨",
+    title: "CREADORES",
+    colorTag: "ROJO",
+    desc: "Tienes el don de imaginar lo que otros no ven. Eres capaz de transformar ideas en algo tangible y hermoso. Dios te dio creatividad para llenar el mundo de belleza, inspiración y excelencia.",
+    dress: "Viste de rojo y lleva algo que simbolice tu don: pinceles, iPad, libro, gorro de chef, maqueta, etc.",
+    verse: "\"Porque somos hechura de Dios, creados en Cristo Jesús para buenas obras.\" — Efesios 2:10"
+  },
+  solucionadores: {
+    emoji: "🧠",
+    title: "SOLUCIONADORES",
+    colorTag: "AZUL",
+    desc: "Piensas con claridad donde otros ven caos. Tu mente analítica y práctica es un regalo para construir soluciones que realmente funcionan. Dios te dio orden para administrar bien lo que Él ha creado.",
+    dress: "Viste de azul y lleva algo que simbolice tu don: calculadora, robot, computador, etc.",
+    verse: "\"Porque Dios no es Dios de confusión, sino de paz.\" — 1 Corintios 14:33"
+  },
+  protectores: {
+    emoji: "🛡️",
+    title: "PROTECTORES",
+    colorTag: "AMARILLO",
+    desc: "Tu corazón late por los demás. Donde hay dolor, tú estás ahí. Tu empatía y cuidado reflejan el amor de Dios de una manera profunda y transformadora.",
+    dress: "Viste de amarillo y lleva algo que simbolice tu don: estetoscopio, constitución política, uniforme, etc.",
+    verse: "\"Lleven los unos las cargas de los otros, y así cumplirán la ley de Cristo.\" — Gálatas 6:2"
+  },
+  comunicadores: {
+    emoji: "📢",
+    title: "COMUNICADORES",
+    colorTag: "VERDE",
+    desc: "Tienes el poder de las palabras. Sabes conectar, inspirar y mover a la acción. Dios te dio voz para llevar Su mensaje y unir a las personas en torno a la verdad.",
+    dress: "Viste de verde y lleva algo que simbolice tu don: un micrófono, una bandera, un trípode, etc.",
+    verse: "\"¡Cuán hermosos son los pies de los que anuncian la paz, de los que anuncian buenas nuevas!\" — Romanos 10:15"
+  }
+};
+
+let current = 0;
+let answers = new Array(10).fill(null);
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function startQuiz() {
+  show('quiz');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = questions[current];
+  const pct = Math.round((current / questions.length) * 100);
+  document.getElementById('progLabel').textContent = `Pregunta ${current+1} de ${questions.length}`;
+  document.getElementById('progPct').textContent = pct + '%';
+  document.getElementById('progFill').style.width = pct + '%';
+
+  const container = document.getElementById('qContainer');
+  container.innerHTML = `
+    <div class="question-card">
+      <div class="q-number">Pregunta ${current+1}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="options">
+        ${q.opts.map((o, i) => `
+          <button class="option-btn ${answers[current] === i ? 'selected' : ''}" onclick="selectOption(${i})">
+            <span class="letter">${o.letter}</span>
+            <span>${o.text}</span>
+          </button>
+        `).join('')}
+      </div>
+      <div class="nav-row">
+        ${current > 0 ? '<button class="btn-nav btn-prev" onclick="prev()">← Atrás</button>' : ''}
+        <button class="btn-nav btn-next" id="btnNext" onclick="next()" ${answers[current] === null ? 'disabled' : ''}>
+          ${current === questions.length - 1 ? 'Ver resultado' : 'Siguiente →'}
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function selectOption(i) {
+  answers[current] = i;
+  document.querySelectorAll('.option-btn').forEach((b, idx) => {
+    b.classList.toggle('selected', idx === i);
+  });
+  document.getElementById('btnNext').disabled = false;
+}
+
+function prev() {
+  if (current > 0) { current--; renderQuestion(); }
+}
+
+function next() {
+  if (answers[current] === null) return;
+  if (current < questions.length - 1) {
+    current++;
+    renderQuestion();
+    window.scrollTo({top:0, behavior:'smooth'});
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  const counts = { creadores:0, solucionadores:0, protectores:0, comunicadores:0 };
+  answers.forEach((a, i) => {
+    if (a !== null) counts[questions[i].opts[a].cat]++;
+  });
+
+  let winner = 'creadores';
+  let max = 0;
+  for (const [k,v] of Object.entries(counts)) {
+    if (v > max) { max = v; winner = k; }
+  }
+
+  const r = resultData[winner];
+  const resultEl = document.getElementById('result');
+  resultEl.innerHTML = `
+    <div class="result-card ${winner}">
+      <div class="result-emoji">${r.emoji}</div>
+      <div class="result-label">Tu superpoder es</div>
+      <div class="result-title">${r.title}</div>
+      <span class="result-color-tag">Color: ${r.colorTag}</span>
+      <p class="result-desc">${r.desc}</p>
+      <p class="result-verse">${r.verse}</p>
+      <div class="result-dress">
+        <div class="result-dress-title">🎽 Código de vestuario</div>
+        <div class="result-dress-text">${r.dress}</div>
+      </div>
+      <div class="brand-footer">NXT WAVE</div>
+    </div>
+    <button class="btn-retry" onclick="retry()">↻ Repetir test</button>
+    <p class="screenshot-hint">📸 Haz screenshot de tu resultado</p>
+  `;
+  show('result');
+}
+
+function retry() {
+  current = 0;
+  answers = new Array(10).fill(null);
+  show('intro');
+}
+</script>
+</body>
+</html>

@@ -26,4 +26,4 @@ Single HTML file, zero dependencies, no backend. All data stays on the user's de
 
 ## Live site
 
-🔗 `[https://dstor0511.github.io/Nxt-wave-test/]`
+🔗 [https://dstor0511.github.io/Nxt-wave-test/]

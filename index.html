@@ -227,8 +227,8 @@ body{
 }
 .creadores .result-title{color:var(--red)}
 .creadores .result-color-tag{background:var(--red);color:#fff}
-.solucionadores .result-title{color:var(--blue)}
-.solucionadores .result-color-tag{background:var(--blue);color:#fff}
+. .result-title{color:var(--blue)}
+. .result-color-tag{background:var(--blue);color:#fff}
 .protectores .result-title{color:var(--yellow)}
 .protectores .result-color-tag{background:var(--yellow);color:#000}
 .comunicadores .result-title{color:var(--green)}
@@ -403,7 +403,7 @@ const questions = [
 const resultData = {
   creadores: {
     emoji: "🎨",
-    title: "CREADORES",
+    title: "CREADOR",
     colorTag: "ROJO",
     desc: "Tienes el don de imaginar lo que otros no ven. Eres capaz de transformar ideas en algo tangible y hermoso. Dios te dio creatividad para llenar el mundo de belleza, inspiración y excelencia.",
     dress: "Viste de rojo y lleva algo que simbolice tu don: pinceles, iPad, libro, gorro de chef, maqueta, etc.",
@@ -411,7 +411,7 @@ const resultData = {
   },
   solucionadores: {
     emoji: "🧠",
-    title: "SOLUCIONADORES",
+    title: "SOLUCIONADOR",
     colorTag: "AZUL",
     desc: "Piensas con claridad donde otros ven caos. Tu mente analítica y práctica es un regalo para construir soluciones que realmente funcionan. Dios te dio orden para administrar bien lo que Él ha creado.",
     dress: "Viste de azul y lleva algo que simbolice tu don: calculadora, robot, computador, etc.",
@@ -419,7 +419,7 @@ const resultData = {
   },
   protectores: {
     emoji: "🛡️",
-    title: "PROTECTORES",
+    title: "PROTECTOR",
     colorTag: "AMARILLO",
     desc: "Tu corazón late por los demás. Donde hay dolor, tú estás ahí. Tu empatía y cuidado reflejan el amor de Dios de una manera profunda y transformadora.",
     dress: "Viste de amarillo y lleva algo que simbolice tu don: estetoscopio, constitución política, uniforme, etc.",
@@ -427,7 +427,7 @@ const resultData = {
   },
   comunicadores: {
     emoji: "📢",
-    title: "COMUNICADORES",
+    title: "COMUNICADOR",
     colorTag: "VERDE",
     desc: "Tienes el poder de las palabras. Sabes conectar, inspirar y mover a la acción. Dios te dio voz para llevar Su mensaje y unir a las personas en torno a la verdad.",
     dress: "Viste de verde y lleva algo que simbolice tu don: un micrófono, una bandera, un trípode, etc.",
@@ -525,7 +525,7 @@ function showResult() {
       <p class="result-desc">${r.desc}</p>
       <p class="result-verse">${r.verse}</p>
       <div class="result-dress">
-        <div class="result-dress-title">🎽 Código de vestuario</div>
+        <div class="result-dress-title">Código de vestuario</div>
         <div class="result-dress-text">${r.dress}</div>
       </div>
       <div class="brand-footer">NXT WAVE</div>
